@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>LP Deployer</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #0a0a0a; color: #fff; min-height: 100vh; }
+
+#loginScreen { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; }
+.login-title { font-size: 28px; font-weight: 900; color: #fe2c55; margin-bottom: 6px; }
+.login-sub { font-size: 13px; color: #555; margin-bottom: 32px; }
+.login-box { background: #161616; border: 1px solid #222; border-radius: 20px; padding: 24px; width: 100%; max-width: 320px; }
+.fi { width: 100%; background: #0d0d0d; border: 1.5px solid #2a2a2a; border-radius: 12px; color: #fff; font-size: 16px; padding: 14px 16px; outline: none; margin-bottom: 12px; -webkit-appearance: none; display: block; }
+.fi:focus { border-color: #fe2c55; }
+.fi::placeholder { color: #444; }
+.btn-login { width: 100%; background: #fe2c55; border: none; border-radius: 12px; color: #fff; font-size: 16px; font-weight: 900; padding: 16px; cursor: pointer; display: block; -webkit-appearance: none; margin-top: 4px; }
+.err { color: #f87171; font-size: 13px; text-align: center; margin-top: 10px; min-height: 20px; }
+
+#mainScreen { display: none; padding: 20px 16px 80px; }
+.topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.topbar-title { font-size: 18px; font-weight: 900; color: #fe2c55; }
+.topbar-right { display: flex; align-items: center; gap: 8px; }
+.topbar-user { font-size: 12px; color: #555; }
+.btn-sm { font-size: 12px; color: #888; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 8px; padding: 6px 10px; cursor: pointer; -webkit-appearance: none; }
+
+.tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+.tab { flex: 1; padding: 11px 4px; border-radius: 10px; border: 1.5px solid #222; background: #161616; color: #555; font-size: 12px; font-weight: 700; cursor: pointer; text-align: center; -webkit-appearance: none; }
+.tab.active { background: #fe2c55; border-color: #fe2c55; color: #fff; }
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+.card { background: #161616; border: 1px solid #222; border-radius: 16px; padding: 18px; margin-bottom: 12px; }
+.card-label { font-size: 11px; font-weight: 900; color: #fe2c55; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+.row2 { display: flex; gap: 8px; }
+.row2 .fw { flex: 1; }
+.fw { margin-bottom: 10px; }
+.fw:last-child { margin-bottom: 0; }
+.hint { font-size: 11px; color: #444; margin-top: 6px; line-height: 1.5; }
+
+.upload-zone { border: 2px dashed #2a2a2a; border-radius: 12px; padding: 24px 16px; text-align: center; position: relative; cursor: pointer; }
+.upload-zone input { position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
+.upload-icon { font-size: 28px; margin-bottom: 8px; }
+.upload-text { font-size: 13px; color: #555; }
+.upload-text b { color: #fe2c55; }
+.prog-wrap { display: none; margin-top: 10px; }
+.prog-bar { height: 4px; background: #1a1a1a; border-radius: 2px; overflow: hidden; }
+.prog-fill { height: 100%; background: #fe2c55; width: 0; transition: width 0.3s; border-radius: 2px; }
+.upload-ok { display: none; margin-top: 10px; font-size: 12px; color: #22c55e; text-align: center; }
+
+.phone-wrap { margin-top: 14px; border-radius: 18px; overflow: hidden; border: 2px solid #2a2a2a; background: #fff; max-width: 200px; margin-left: auto; margin-right: auto; }
+.phone-nav { background: #fff; padding: 9px 12px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #eee; }
+.pni { font-size: 13px; color: #333; }
+.pnc { text-align: center; }
+.pnn { font-size: 11px; font-weight: 900; color: #000; line-height: 1.2; }
+.pnh { font-size: 9px; color: #888; }
+.pnr { display: flex; gap: 8px; align-items: center; }
+.phone-img { width: 100%; aspect-ratio: 9/14; background: #f0f0f0; overflow: hidden; }
+.phone-img img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: none; }
+.phone-empty { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #ccc; font-size: 10px; gap: 4px; }
+.url-preview { margin-top: 10px; background: #1a0810; border: 1px solid #2a1020; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #fe2c55; font-weight: 700; word-break: break-all; }
+
+.btn-deploy { width: 100%; background: linear-gradient(135deg, #fe2c55, #ff6b35); border: none; border-radius: 14px; color: #fff; font-size: 17px; font-weight: 900; padding: 20px; cursor: pointer; margin-top: 4px; -webkit-appearance: none; }
+.btn-deploy:disabled { opacity: 0.4; }
+
+.log-wrap { display: none; margin-top: 12px; }
+.log-wrap.show { display: block; }
+.log-box { background: #060f06; border: 1px solid #1a3a1a; border-radius: 10px; padding: 14px; font-family: monospace; font-size: 11px; line-height: 2; max-height: 180px; overflow-y: auto; }
+.ll { display: flex; gap: 8px; }
+.lt { color: #7ec87e; word-break: break-all; }
+.lt.e { color: #f87171; }
+.lt.i { color: #60a5fa; }
+.lt.m { color: #444; }
+
+.success-wrap { display: none; background: #071a07; border: 1px solid #1a4a1a; border-radius: 16px; padding: 22px 18px; margin-top: 12px; text-align: center; }
+.success-wrap.show { display: block; }
+.si { font-size: 48px; margin-bottom: 10px; }
+.st { font-size: 20px; font-weight: 900; color: #22c55e; margin-bottom: 14px; }
+.su { background: #0a250a; border: 1px solid #1e4a1e; border-radius: 10px; padding: 14px; font-size: 14px; color: #22c55e; font-weight: 700; word-break: break-all; margin-bottom: 12px; }
+.btn-green { width: 100%; background: #22c55e; border: none; border-radius: 12px; color: #000; font-size: 16px; font-weight: 900; padding: 16px; cursor: pointer; margin-bottom: 10px; -webkit-appearance: none; }
+.btn-open { display: block; width: 100%; background: #163a16; border: 1px solid #1e4a1e; border-radius: 12px; color: #22c55e; font-size: 14px; font-weight: 700; padding: 14px; text-decoration: none; margin-bottom: 10px; text-align: center; }
+.btn-dark { width: 100%; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; color: #888; font-size: 14px; font-weight: 700; padding: 14px; cursor: pointer; -webkit-appearance: none; }
+
+.user-list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.user-row { background: #0d0d0d; border: 1px solid #1e1e1e; border-radius: 10px; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; }
+.uid { font-size: 13px; font-weight: 700; }
+.urole { font-size: 10px; color: #555; margin-top: 2px; }
+.btn-del { background: #200808; border: 1px solid #3a1010; border-radius: 8px; color: #f87171; font-size: 11px; font-weight: 700; padding: 6px 10px; cursor: pointer; -webkit-appearance: none; }
+.new-cred { display: none; background: #071a07; border: 1px solid #1a3a1a; border-radius: 12px; padding: 16px; margin-top: 10px; text-align: center; }
+.new-cred.show { display: block; }
+.nc-id { font-size: 20px; font-weight: 900; color: #22c55e; letter-spacing: 2px; margin-bottom: 4px; }
+.nc-pw { font-size: 15px; color: #7ec87e; margin-bottom: 12px; }
+
+.spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 6px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+
+</head>
+<body>
+
+<div id="loginScreen">
+  <div class="login-title">▶ LP Deployer</div>
+  <div class="login-sub">TikTok LP 自動デプロイツール</div>
+  <div class="login-box">
+    <input class="fi" type="text" id="lid" placeholder="ID" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+    <input class="fi" type="password" id="lpw" placeholder="パスワード" autocomplete="current-password">
+    <button class="btn-login" id="loginBtn" type="button">ログイン</button>
+    <div class="err" id="errMsg"></div>
+  </div>
+</div>
+
+<div id="mainScreen">
+  <div class="topbar">
+    <div class="topbar-title">▶ LP Deployer</div>
+    <div class="topbar-right">
+      <div class="topbar-user" id="topUser"></div>
+      <button class="btn-sm" id="logoutBtn" type="button">ログアウト</button>
+    </div>
+  </div>
+  <div class="tabs" id="tabBar">
+    <button class="tab active" type="button" data-tab="deploy">🚀 デプロイ</button>
+    <button class="tab" type="button" data-tab="settings">⚙️ 設定</button>
+    <button class="tab" type="button" data-tab="admin" id="adminTab" style="display:none">👑 管理</button>
+  </div>
+
+  <!-- デプロイ -->
+
+  <div class="tab-pane active" id="tab-deploy">
+    <div class="card">
+      <div class="card-label">① Worker名（URL）</div>
+      <div class="fw"><input class="fi" style="margin-bottom:0" type="text" id="workerName" placeholder="例: tiktok-minyan221" autocorrect="off" autocapitalize="off" spellcheck="false"></div>
+      <div class="url-preview" id="urlPreview">https://[名前].workers.dev</div>
+    </div>
+    <div class="card">
+      <div class="card-label">② ナビバー</div>
+      <div class="row2">
+        <div class="fw"><input class="fi" style="margin-bottom:0" type="text" id="navName" placeholder="表示名（例: ゆ）"></div>
+        <div class="fw"><input class="fi" style="margin-bottom:0" type="text" id="navHandle" placeholder="@アカウント名" autocorrect="off" autocapitalize="off" spellcheck="false"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-label">③ LP画像</div>
+      <div class="upload-zone" id="uploadZone">
+        <input type="file" accept="image/*" id="fileInput">
+        <div class="upload-icon">📁</div>
+        <div class="upload-text"><b>タップして画像を選択</b><br>PNG・JPG対応</div>
+      </div>
+      <div class="prog-wrap" id="progWrap">
+        <div style="font-size:11px;color:#555;margin-bottom:6px;text-align:center">アップロード中...</div>
+        <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
+      </div>
+      <div class="upload-ok" id="uploadOk">✅ アップロード完了！</div>
+      <div class="phone-wrap">
+        <div class="phone-nav">
+          <span class="pni">←</span>
+          <div class="pnc"><div class="pnn" id="prevName">名前</div><div class="pnh" id="prevHandle">@アカウント名</div></div>
+          <div class="pnr">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span class="pni">→</span>
+          </div>
+        </div>
+        <div class="phone-img">
+          <div class="phone-empty" id="phoneEmpty"><span style="font-size:22px">🖼</span><span>画像を選択</span></div>
+          <img id="phoneImg" alt="">
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-label">④ アフィリンク</div>
+      <div class="fw"><input class="fi" style="margin-bottom:0" type="text" id="affLink" placeholder="https://lite.tiktok.com/t/..." autocorrect="off" autocapitalize="off" spellcheck="false"></div>
+      <div class="hint">どこをタップしても飛ぶURL</div>
+    </div>
+    <button class="btn-deploy" type="button" id="deployBtn">🚀 自動デプロイ</button>
+    <div class="log-wrap" id="logWrap">
+      <div style="font-size:11px;color:#fe2c55;font-weight:900;letter-spacing:1px;margin-bottom:8px">📡 デプロイログ</div>
+      <div class="log-box" id="logBox"></div>
+    </div>
+    <div class="success-wrap" id="successWrap">
+      <div class="si">🎉</div>
+      <div class="st">デプロイ完了！</div>
+      <div class="su" id="sUrl"></div>
+      <button class="btn-green" type="button" id="copyBtn">📋 URLをコピー</button>
+      <a class="btn-open" id="openBtn" href="#" target="_blank">🔗 LPを開いて確認</a>
+      <button class="btn-dark" type="button" id="againBtn">＋ もう1個作る</button>
+    </div>
+  </div>
+
+  <!-- 設定 -->
+
+  <div class="tab-pane" id="tab-settings">
+    <div class="card">
+      <div class="card-label">Cloudflare API設定</div>
+      <div class="fw"><input class="fi" type="password" id="cfKey" placeholder="Global API Key" autocorrect="off" autocapitalize="off" spellcheck="false"></div>
+      <div class="fw"><input class="fi" type="email" id="cfEmail" placeholder="メールアドレス" autocorrect="off" spellcheck="false"></div>
+      <div class="hint">このブラウザに記憶されます</div>
+      <button class="btn-dark" type="button" id="saveBtn" style="margin-top:10px">💾 保存する</button>
+      <div id="saveOk" style="font-size:12px;color:#22c55e;text-align:center;margin-top:8px;display:none">✅ 保存しました！</div>
+    </div>
+  </div>
+
+  <!-- 管理 -->
+
+  <div class="tab-pane" id="tab-admin">
+    <div class="card">
+      <div class="card-label">👑 ユーザー管理</div>
+      <div class="user-list" id="userList"></div>
+      <button class="btn-dark" type="button" id="genBtn" style="margin-top:10px">＋ 新しいIDを発行</button>
+      <div class="new-cred" id="newCred">
+        <div style="font-size:11px;color:#555;margin-bottom:8px">新規ユーザー情報</div>
+        <div class="nc-id" id="ncId"></div>
+        <div class="nc-pw" id="ncPw"></div>
+        <button class="btn-green" type="button" id="ccBtn" style="font-size:13px;padding:12px">📋 コピーして共有</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== ユーザーDB（メモリ内） =====
+// ⚠️ ここにユーザーを追加する
+var USERS = {
+  'admin': { pw: 'admin1234', role: 'admin', cfKey: '', cfEmail: '' }
+};
+
+var IMGBB_KEY = 'd0d0fc17ec6a67badbdf6719039e3a07';
+var currentUser = null;
+var uploadedUrl = '';
+
+// ===== ログイン =====
+document.getElementById('loginBtn').addEventListener('click', function() {
+  login();
+});
+document.getElementById('lpw').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') login();
+});
+
+function login() {
+  var id = document.getElementById('lid').value.trim();
+  var pw = document.getElementById('lpw').value;
+  var err = document.getElementById('errMsg');
+
+  if (USERS[id] && USERS[id].pw === pw) {
+    currentUser = id;
+    err.textContent = '';
+    showMain();
+  } else {
+    err.textContent = 'IDまたはパスワードが違います';
+  }
+}
+
+function showMain() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('mainScreen').style.display = 'block';
+  document.getElementById('topUser').textContent = currentUser;
+
+  // 保存済みのAPIキーを読み込む
+  var u = USERS[currentUser];
+  if (u.cfKey) document.getElementById('cfKey').value = u.cfKey;
+  if (u.cfEmail) document.getElementById('cfEmail').value = u.cfEmail;
+
+  if (u.role === 'admin') {
+    document.getElementById('adminTab').style.display = 'block';
+    renderUsers();
+  }
+}
+
+document.getElementById('logoutBtn').addEventListener('click', function() {
+  currentUser = null;
+  document.getElementById('mainScreen').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('lid').value = '';
+  document.getElementById('lpw').value = '';
+  document.getElementById('errMsg').textContent = '';
+});
+
+// ===== タブ =====
+document.getElementById('tabBar').addEventListener('click', function(e) {
+  var tab = e.target.closest('.tab');
+  if (!tab) return;
+  var name = tab.getAttribute('data-tab');
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelectorAll('.tab-pane').forEach(function(p) { p.classList.remove('active'); });
+  tab.classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+});
+
+// ===== プレビュー =====
+document.getElementById('workerName').addEventListener('input', function() {
+  var n = this.value.trim();
+  document.getElementById('urlPreview').textContent = n ? 'https://' + n + '.workers.dev' : 'https://[名前].workers.dev';
+});
+document.getElementById('navName').addEventListener('input', function() {
+  document.getElementById('prevName').textContent = this.value.trim() || '名前';
+});
+document.getElementById('navHandle').addEventListener('input', function() {
+  document.getElementById('prevHandle').textContent = this.value.trim() || '@アカウント名';
+});
+
+// ===== 画像アップロード =====
+document.getElementById('fileInput').addEventListener('change', function() {
+  var file = this.files[0];
+  if (!file) return;
+
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var img = document.getElementById('phoneImg');
+    img.src = e.target.result;
+    img.style.display = 'block';
+    document.getElementById('phoneEmpty').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+
+  document.getElementById('progWrap').style.display = 'block';
+  document.getElementById('uploadOk').style.display = 'none';
+  document.getElementById('uploadZone').style.borderColor = '#fe2c55';
+
+  var p = 0;
+  var fill = document.getElementById('progFill');
+  var iv = setInterval(function() {
+    p = Math.min(p + Math.random() * 12, 85);
+    fill.style.width = p + '%';
+  }, 200);
+
+  var fd = new FormData();
+  fd.append('image', file);
+  fd.append('key', IMGBB_KEY);
+
+  fetch('https://api.imgbb.com/1/upload', { method: 'POST', body: fd })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      clearInterval(iv);
+      fill.style.width = '100%';
+      if (data.success) {
+        uploadedUrl = data.data.url;
+        setTimeout(function() {
+          document.getElementById('progWrap').style.display = 'none';
+          document.getElementById('uploadOk').style.display = 'block';
+          document.getElementById('uploadZone').style.borderColor = '#22c55e';
+        }, 300);
+      } else {
+        throw new Error('失敗');
+      }
+    })
+    .catch(function() {
+      clearInterval(iv);
+      document.getElementById('progWrap').style.display = 'none';
+      document.getElementById('uploadZone').style.borderColor = '#f87171';
+      alert('画像アップロード失敗。もう一度試してください。');
+    });
+});
+
+// ===== 設定保存 =====
+document.getElementById('saveBtn').addEventListener('click', function() {
+  var k = document.getElementById('cfKey').value.trim();
+  var e = document.getElementById('cfEmail').value.trim();
+  USERS[currentUser].cfKey = k;
+  USERS[currentUser].cfEmail = e;
+  var ok = document.getElementById('saveOk');
+  ok.style.display = 'block';
+  setTimeout(function() { ok.style.display = 'none'; }, 2000);
+});
+
+// ===== ログ =====
+function addLog(icon, text, type) {
+  var b = document.getElementById('logBox');
+  var d = document.createElement('div');
+  d.className = 'll';
+  d.innerHTML = '<span>' + icon + '</span><span class="lt ' + (type || '') + '">' + text + '</span>';
+  b.appendChild(d);
+  b.scrollTop = b.scrollHeight;
+}
+
+// ===== Workerコード =====
+function buildCode(img, aff, name, handle) {
+  var n = name || 'TikTok';
+  var h = handle || '@tiktok';
+  return 'export default {\n' +
+    '  async fetch(request) {\n' +
+    '    const I = "' + img + '";\n' +
+    '    const A = "' + aff + '";\n' +
+    '    const N = "' + n + '";\n' +
+    '    const H = "' + h + '";\n' +
+    '    const html = `<!DOCTYPE html>\n' +
+    '<html lang="ja"><head>\n' +
+    '<meta charset="UTF-8">\n' +
+    '<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">\n' +
+    '<title>TikTok</title>\n' +
+    '<style>*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{width:100%;background:#fff;font-family:-apple-system,sans-serif}.nb{position:fixed;top:0;left:0;right:0;z-index:999;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid #f0f0f0}.ni{font-size:18px;color:#333;text-decoration:none;display:flex;align-items:center}.nc{text-align:center;text-decoration:none}.nn{font-size:15px;font-weight:700;color:#000;line-height:1.2}.nh{font-size:11px;color:#888}.nr{display:flex;gap:14px;align-items:center}.ct{padding-top:52px}.ct a{display:block;width:100%;text-decoration:none}.ct img{width:100%;display:block}</style>\n' +
+
+```
+'</head><body>\n' +
+'<div class="nb">\n' +
+'<a class="ni" href="${A}">&#8592;</a>\n' +
+'<a href="${A}" class="nc"><div class="nn">${N}</div><div class="nh">${H}</div></a>\n' +
+'<div class="nr"><a class="ni" href="${A}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></a>\n' +
+'<a class="ni" href="${A}">&#8594;</a></div></div>\n' +
+'<div class="ct"><a href="${A}"><img src="${I}" alt=""></a></div>\n' +
+'</body></html>`;\n' +
+'    return new Response(html, { headers: { "Content-Type": "text/html;charset=UTF-8", "Cache-Control": "no-cache" } });\n' +
+'  }\n' +
+'};\n';
+```
+
+}
+
+// ===== デプロイ =====
+document.getElementById(‘deployBtn’).addEventListener(‘click’, function() {
+var u = USERS[currentUser];
+var apiKey = u.cfKey || document.getElementById(‘cfKey’).value.trim();
+var email = u.cfEmail || document.getElementById(‘cfEmail’).value.trim();
+var wName = document.getElementById(‘workerName’).value.trim();
+var navName = document.getElementById(‘navName’).value.trim();
+var navHandle = document.getElementById(‘navHandle’).value.trim();
+var aff = document.getElementById(‘affLink’).value.trim();
+
+if (!apiKey || !email) { alert(‘⚙️設定タブでAPIキーとメールを保存してください！’); return; }
+if (!wName) { alert(‘Worker名を入力してください！’); return; }
+if (!uploadedUrl) { alert(‘画像をアップロードしてください！’); return; }
+if (!aff) { alert(‘アフィリンクを入力してください！’); return; }
+
+var btn = document.getElementById(‘deployBtn’);
+btn.disabled = true;
+btn.innerHTML = ‘<span class="spinner"></span>デプロイ中…’;
+document.getElementById(‘logWrap’).classList.add(‘show’);
+document.getElementById(‘successWrap’).classList.remove(‘show’);
+document.getElementById(‘logBox’).innerHTML = ‘’;
+
+addLog(‘🔑’, ‘API認証確認中…’);
+
+fetch(‘https://api.cloudflare.com/client/v4/accounts’, {
+headers: { ‘X-Auth-Email’: email, ‘X-Auth-Key’: apiKey, ‘Content-Type’: ‘application/json’ }
+})
+.then(function(r) { return r.json(); })
+.then(function(d) {
+if (!d.success) throw new Error(’認証失敗: ’ + (d.errors && d.errors[0] ? d.errors[0].message : ‘’));
+var accountId = d.result[0].id;
+addLog(‘✅’, ‘アカウントOK’, ‘i’);
+addLog(‘🚀’, ‘”’ + wName + ‘” をデプロイ中…’);
+
+```
+var code = buildCode(uploadedUrl, aff, navName, navHandle);
+var fd = new FormData();
+fd.append('metadata', new Blob([JSON.stringify({ main_module: 'worker.js' })], { type: 'application/json' }), 'metadata.json');
+fd.append('worker.js', new Blob([code], { type: 'application/javascript+module' }), 'worker.js');
+
+return fetch('https://api.cloudflare.com/client/v4/accounts/' + accountId + '/workers/scripts/' + wName, {
+  method: 'PUT', headers: { 'X-Auth-Email': email, 'X-Auth-Key': apiKey }, body: fd
+})
+.then(function(r) { return r.json(); })
+.then(function(d2) {
+  if (!d2.success) throw new Error('デプロイ失敗: ' + (d2.errors && d2.errors[0] ? d2.errors[0].message : ''));
+  addLog('✅', 'デプロイ成功！', 'i');
+  addLog('🌐', 'サブドメイン有効化中...');
+
+  return fetch('https://api.cloudflare.com/client/v4/accounts/' + accountId + '/workers/scripts/' + wName + '/subdomain', {
+    method: 'POST',
+    headers: { 'X-Auth-Email': email, 'X-Auth-Key': apiKey, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ enabled: true })
+  });
+})
+.then(function() {
+  addLog('✅', '有効化完了', 'i');
+  addLog('⏳', '反映待ち（10秒）...', 'm');
+  return new Promise(function(resolve) { setTimeout(resolve, 10000); });
+})
+.then(function() {
+  var url = 'https://' + wName + '.workers.dev';
+  addLog('🎉', '完成！ ' + url);
+  document.getElementById('sUrl').textContent = url;
+  document.getElementById('openBtn').href = url;
+  document.getElementById('successWrap').classList.add('show');
+  document.getElementById('successWrap').scrollIntoView({ behavior: 'smooth' });
+  btn.disabled = false;
+  btn.innerHTML = '🚀 自動デプロイ';
+});
+```
+
+})
+.catch(function(e) {
+addLog(‘❌’, e.message, ‘e’);
+addLog(‘💡’, ‘設定タブのAPIキーとメールを確認してみて’, ‘m’);
+btn.disabled = false;
+btn.innerHTML = ‘🚀 自動デプロイ’;
+});
+});
+
+// ===== URL コピー =====
+document.getElementById(‘copyBtn’).addEventListener(‘click’, function() {
+var url = document.getElementById(‘sUrl’).textContent;
+var btn = this;
+if (navigator.clipboard) {
+navigator.clipboard.writeText(url).then(function() {
+btn.textContent = ‘✅ コピーしました！’;
+setTimeout(function() { btn.textContent = ‘📋 URLをコピー’; }, 2000);
+}).catch(function() {
+prompt(‘URLをコピーしてください:’, url);
+});
+} else {
+prompt(‘URLをコピーしてください:’, url);
+}
+});
+
+document.getElementById(‘againBtn’).addEventListener(‘click’, function() {
+document.getElementById(‘workerName’).value = ‘’;
+document.getElementById(‘navName’).value = ‘’;
+document.getElementById(‘navHandle’).value = ‘’;
+document.getElementById(‘affLink’).value = ‘’;
+uploadedUrl = ‘’;
+document.getElementById(‘urlPreview’).textContent = ‘https://[名前].workers.dev’;
+document.getElementById(‘prevName’).textContent = ‘名前’;
+document.getElementById(‘prevHandle’).textContent = ‘@アカウント名’;
+document.getElementById(‘phoneImg’).style.display = ‘none’;
+document.getElementById(‘phoneEmpty’).style.display = ‘flex’;
+document.getElementById(‘uploadZone’).style.borderColor = ‘’;
+document.getElementById(‘uploadOk’).style.display = ‘none’;
+document.getElementById(‘logWrap’).classList.remove(‘show’);
+document.getElementById(‘successWrap’).classList.remove(‘show’);
+window.scrollTo({ top: 0, behavior: ‘smooth’ });
+});
+
+// ===== 管理 =====
+function renderUsers() {
+var list = document.getElementById(‘userList’);
+list.innerHTML = ‘’;
+Object.keys(USERS).forEach(function(id) {
+var info = USERS[id];
+var d = document.createElement(‘div’);
+d.className = ‘user-row’;
+d.innerHTML = ‘<div><div class="uid">’ + id + (info.role === ‘admin’ ? ’ 👑’ : ‘’) + ‘</div>’
++ ‘<div class="urole">’ + (info.role === ‘admin’ ? ‘管理者’ : ‘ユーザー’) + ‘</div></div>’
++ (id !== ‘admin’ ? ‘<button class="btn-del" type="button" onclick="delUser(\'' + id + '\')">削除</button>’ : ‘’);
+list.appendChild(d);
+});
+}
+
+window.delUser = function(id) {
+if (!confirm(id + ’ を削除しますか？’)) return;
+delete USERS[id];
+renderUsers();
+document.getElementById(‘newCred’).classList.remove(‘show’);
+};
+
+document.getElementById(‘genBtn’).addEventListener(‘click’, function() {
+var id = ‘user’ + Math.random().toString(36).slice(2, 7).toUpperCase();
+var pw = Math.random().toString(36).slice(2, 10);
+USERS[id] = { pw: pw, role: ‘user’, cfKey: ‘’, cfEmail: ‘’ };
+renderUsers();
+document.getElementById(‘ncId’).textContent = ’ID: ’ + id;
+document.getElementById(‘ncPw’).textContent = ’PW: ’ + pw;
+document.getElementById(‘newCred’).classList.add(‘show’);
+});
+
+document.getElementById(‘ccBtn’).addEventListener(‘click’, function() {
+var text = document.getElementById(‘ncId’).textContent + ‘\n’ + document.getElementById(‘ncPw’).textContent;
+var btn = this;
+if (navigator.clipboard) {
+navigator.clipboard.writeText(text).then(function() {
+btn.textContent = ‘✅ コピーしました！’;
+setTimeout(function() { btn.textContent = ‘📋 コピーして共有’; }, 2000);
+}).catch(function() { prompt(‘コピーしてください:’, text); });
+} else {
+prompt(‘コピーしてください:’, text);
+}
+});
+</script>
+
+</body>
+</html>
