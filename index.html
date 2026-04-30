@@ -8,7 +8,6 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, sans-serif; background: #0a0a0a; color: #fff; min-height: 100vh; }
-
 #setupScreen { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; }
 .title { font-size: 28px; font-weight: 900; color: #fe2c55; margin-bottom: 6px; text-align: center; }
 .sub { font-size: 13px; color: #555; margin-bottom: 32px; text-align: center; }
@@ -18,18 +17,15 @@ input { width: 100%; background: #0d0d0d; border: 1.5px solid #2a2a2a; border-ra
 input:focus { border-color: #fe2c55; }
 input::placeholder { color: #444; }
 .err { color: #f87171; font-size: 13px; text-align: center; margin-bottom: 10px; display: none; }
-
-a.btn { display: block; width: 100%; text-align: center; text-decoration: none; border-radius: 12px; font-size: 16px; font-weight: 900; padding: 16px; cursor: pointer; font-family: -apple-system, sans-serif; -webkit-tap-highlight-color: rgba(0,0,0,0); }
+a.btn { display: block; width: 100%; text-align: center; text-decoration: none; border-radius: 12px; font-size: 16px; font-weight: 900; padding: 16px; cursor: pointer; font-family: -apple-system, sans-serif; }
 a.btn-red { background: #fe2c55; color: #fff; }
 a.btn-green { background: #22c55e; color: #000; margin-bottom: 10px; }
 a.btn-dark { background: #1a1a1a; border: 1px solid #2a2a2a; color: #888; margin-bottom: 10px; }
-a.btn-outline { background: #163a16; border: 1px solid #1e4a1e; color: #22c55e; margin-bottom: 10px; }
+a.btn-outline { background: #163a16; border: 1px solid #1e4a1e; color: #22c55e; margin-bottom: 10px; text-align: center; }
 a.btn-sm { background: #161616; border: 1px solid #222; color: #555; font-size: 12px; padding: 6px 10px; border-radius: 8px; }
-
 #mainScreen { display: none; padding: 20px 16px 80px; }
 .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
 .topbar-title { font-size: 18px; font-weight: 900; color: #fe2c55; }
-
 .card { background: #161616; border: 1px solid #222; border-radius: 16px; padding: 18px; margin-bottom: 12px; }
 .card-label { font-size: 11px; font-weight: 900; color: #fe2c55; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
 .row2 { display: flex; gap: 8px; }
@@ -37,7 +33,6 @@ a.btn-sm { background: #161616; border: 1px solid #222; color: #555; font-size: 
 .fw { margin-bottom: 10px; }
 .fw:last-child { margin-bottom: 0; }
 .hint { font-size: 11px; color: #444; margin-top: 6px; line-height: 1.5; }
-
 .upload-zone { border: 2px dashed #2a2a2a; border-radius: 12px; padding: 24px 16px; text-align: center; position: relative; cursor: pointer; }
 .upload-zone input[type=file] { position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; font-size: 16px; }
 .upload-icon { font-size: 28px; margin-bottom: 8px; }
@@ -47,7 +42,6 @@ a.btn-sm { background: #161616; border: 1px solid #222; color: #555; font-size: 
 .prog-bar { height: 4px; background: #1a1a1a; border-radius: 2px; overflow: hidden; }
 .prog-fill { height: 100%; background: #fe2c55; width: 0; transition: width 0.3s; border-radius: 2px; }
 .upload-ok { display: none; margin-top: 10px; font-size: 12px; color: #22c55e; text-align: center; }
-
 .phone-wrap { margin-top: 14px; border-radius: 18px; overflow: hidden; border: 2px solid #2a2a2a; background: #fff; max-width: 200px; margin-left: auto; margin-right: auto; }
 .phone-nav { background: #fff; padding: 9px 12px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #eee; }
 .pni { font-size: 13px; color: #333; }
@@ -59,9 +53,7 @@ a.btn-sm { background: #161616; border: 1px solid #222; color: #555; font-size: 
 .phone-img img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: none; }
 .phone-empty { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #ccc; font-size: 10px; gap: 4px; }
 .url-preview { margin-top: 10px; background: #1a0810; border: 1px solid #2a1020; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #fe2c55; font-weight: 700; word-break: break-all; }
-
-a.btn-deploy { display: block; width: 100%; text-align: center; text-decoration: none; background: linear-gradient(135deg, #fe2c55, #ff6b35); border-radius: 14px; color: #fff; font-size: 17px; font-weight: 900; padding: 20px; margin-top: 4px; font-family: -apple-system, sans-serif; -webkit-tap-highlight-color: rgba(0,0,0,0); }
-
+a.btn-deploy { display: block; width: 100%; text-align: center; text-decoration: none; background: linear-gradient(135deg, #fe2c55, #ff6b35); border-radius: 14px; color: #fff; font-size: 17px; font-weight: 900; padding: 20px; margin-top: 4px; font-family: -apple-system, sans-serif; }
 .log-wrap { display: none; margin-top: 12px; }
 .log-wrap.show { display: block; }
 .log-box { background: #060f06; border: 1px solid #1a3a1a; border-radius: 10px; padding: 14px; font-family: monospace; font-size: 11px; line-height: 2; max-height: 180px; overflow-y: auto; }
@@ -70,101 +62,104 @@ a.btn-deploy { display: block; width: 100%; text-align: center; text-decoration:
 .lt.e { color: #f87171; }
 .lt.i { color: #60a5fa; }
 .lt.m { color: #444; }
-
 .success-wrap { display: none; background: #071a07; border: 1px solid #1a4a1a; border-radius: 16px; padding: 22px 18px; margin-top: 12px; text-align: center; }
 .success-wrap.show { display: block; }
 .si { font-size: 48px; margin-bottom: 10px; }
 .st { font-size: 20px; font-weight: 900; color: #22c55e; margin-bottom: 14px; }
 .su { background: #0a250a; border: 1px solid #1e4a1e; border-radius: 10px; padding: 14px; font-size: 14px; color: #22c55e; font-weight: 700; word-break: break-all; margin-bottom: 12px; }
-
 .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 6px; }
 @keyframes spin { to { transform: rotate(360deg); } }
 </style>
-
 </head>
 <body>
 
 <div id="setupScreen">
-  <div class="title">▶ LP Deployer</div>
-  <div class="sub">TikTok LP 自動デプロイツール</div>
+  <div class="title">&#x25B6; LP Deployer</div>
+  <div class="sub">TikTok LP Auto Deploy Tool</div>
   <div class="box">
     <span class="lbl">Cloudflare API Key</span>
     <input type="password" id="cfKey" placeholder="Global API Key" autocorrect="off" autocapitalize="off" spellcheck="false">
-    <span class="lbl">メールアドレス</span>
-    <input type="email" id="cfEmail" placeholder="メールアドレス" autocorrect="off" spellcheck="false">
-    <div class="err" id="errMsg">APIキーとメールを入力してください</div>
-    <a class="btn btn-red" id="startBtn" href="javascript:void(0)">はじめる →</a>
+    <span class="lbl">Email</span>
+    <input type="email" id="cfEmail" placeholder="email@example.com" autocorrect="off" spellcheck="false">
+    <div class="err" id="errMsg">Please enter API Key and Email</div>
+    <a class="btn btn-red" id="startBtn" href="javascript:void(0)">Start &#x2192;</a>
   </div>
 </div>
 
 <div id="mainScreen">
   <div class="topbar">
-    <div class="topbar-title">▶ LP Deployer</div>
-    <a class="btn btn-sm" id="resetBtn" href="javascript:void(0)">API変更</a>
+    <div class="topbar-title">&#x25B6; LP Deployer</div>
+    <a class="btn btn-sm" id="resetBtn" href="javascript:void(0)">Change API</a>
   </div>
 
   <div class="card">
-    <div class="card-label">① Worker名（URL）</div>
-    <div class="fw"><input type="text" id="workerName" placeholder="例: tiktok-minyan221" autocorrect="off" autocapitalize="off" spellcheck="false" style="margin-bottom:0"></div>
-    <div class="url-preview" id="urlPreview">https://[名前].workers.dev</div>
+    <div class="card-label">&#x2460; Worker Name (URL)</div>
+    <div class="fw"><input type="text" id="workerName" placeholder="e.g. tiktok-minyan221" autocorrect="off" autocapitalize="off" spellcheck="false" style="margin-bottom:0"></div>
+    <div class="url-preview" id="urlPreview">https://[name].workers.dev</div>
   </div>
 
   <div class="card">
-    <div class="card-label">② ナビバー</div>
+    <div class="card-label">&#x2461; Nav Bar</div>
     <div class="row2">
-      <div class="fw"><input type="text" id="navName" placeholder="表示名（例: ゆ）" style="margin-bottom:0"></div>
-      <div class="fw"><input type="text" id="navHandle" placeholder="@アカウント名" autocorrect="off" autocapitalize="off" spellcheck="false" style="margin-bottom:0"></div>
+      <div class="fw"><input type="text" id="navName" placeholder="Display name" style="margin-bottom:0"></div>
+      <div class="fw"><input type="text" id="navHandle" placeholder="@account" autocorrect="off" autocapitalize="off" spellcheck="false" style="margin-bottom:0"></div>
     </div>
   </div>
 
   <div class="card">
-    <div class="card-label">③ LP画像</div>
+    <div class="card-label">&#x2462; LP Image</div>
     <div class="upload-zone" id="uploadZone">
       <input type="file" accept="image/*" id="fileInput">
-      <div class="upload-icon">📁</div>
-      <div class="upload-text"><b>タップして画像を選択</b><br>PNG・JPG対応</div>
+      <div class="upload-icon">&#x1F4C1;</div>
+      <div class="upload-text"><b>Tap to select image</b><br>PNG / JPG</div>
     </div>
     <div class="prog-wrap" id="progWrap">
-      <div style="font-size:11px;color:#555;margin-bottom:6px;text-align:center">アップロード中...</div>
+      <div style="font-size:11px;color:#555;margin-bottom:6px;text-align:center">Uploading...</div>
       <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
     </div>
-    <div class="upload-ok" id="uploadOk">✅ アップロード完了！</div>
+    <div class="upload-ok" id="uploadOk">&#x2705; Upload complete!</div>
     <div class="phone-wrap">
       <div class="phone-nav">
-        <span class="pni">←</span>
-        <div class="pnc"><div class="pnn" id="prevName">名前</div><div class="pnh" id="prevHandle">@アカウント名</div></div>
+        <span class="pni">&#x2190;</span>
+        <div class="pnc">
+          <div class="pnn" id="prevName">Name</div>
+          <div class="pnh" id="prevHandle">@account</div>
+        </div>
         <div class="pnr">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-          <span class="pni">→</span>
+          <span class="pni">&#x1F514;</span>
+          <span class="pni">&#x2192;</span>
         </div>
       </div>
       <div class="phone-img">
-        <div class="phone-empty" id="phoneEmpty"><span style="font-size:22px">🖼</span><span>画像を選択</span></div>
+        <div class="phone-empty" id="phoneEmpty">
+          <span style="font-size:22px">&#x1F5BC;</span>
+          <span>Select image</span>
+        </div>
         <img id="phoneImg" alt="">
       </div>
     </div>
   </div>
 
   <div class="card">
-    <div class="card-label">④ アフィリンク</div>
+    <div class="card-label">&#x2463; Affiliate Link</div>
     <div class="fw"><input type="text" id="affLink" placeholder="https://lite.tiktok.com/t/..." autocorrect="off" autocapitalize="off" spellcheck="false" style="margin-bottom:0"></div>
-    <div class="hint">どこをタップしても飛ぶURL</div>
+    <div class="hint">Tapping anywhere goes to this URL</div>
   </div>
 
-<a class="btn btn-deploy" id="deployBtn" href="javascript:void(0)">🚀 自動デプロイ</a>
+<a class="btn btn-deploy" id="deployBtn" href="javascript:void(0)">🚀 Auto Deploy</a>
 
   <div class="log-wrap" id="logWrap">
-    <div style="font-size:11px;color:#fe2c55;font-weight:900;letter-spacing:1px;margin-bottom:8px">📡 デプロイログ</div>
+    <div style="font-size:11px;color:#fe2c55;font-weight:900;letter-spacing:1px;margin-bottom:8px">&#x1F4E1; Deploy Log</div>
     <div class="log-box" id="logBox"></div>
   </div>
 
   <div class="success-wrap" id="successWrap">
-    <div class="si">🎉</div>
-    <div class="st">デプロイ完了！</div>
+    <div class="si">&#x1F389;</div>
+    <div class="st">Deploy Complete!</div>
     <div class="su" id="sUrl"></div>
-    <a class="btn btn-green" id="copyBtn" href="javascript:void(0)">📋 URLをコピー</a>
-    <a class="btn btn-outline" id="openBtn" href="#" target="_blank">🔗 LPを開いて確認</a>
-    <a class="btn btn-dark" id="againBtn" href="javascript:void(0)">＋ もう1個作る</a>
+    <a class="btn btn-green" id="copyBtn" href="javascript:void(0)">&#x1F4CB; Copy URL</a>
+    <a class="btn btn-outline" id="openBtn" href="#" target="_blank">&#x1F517; Open LP</a>
+    <a class="btn btn-dark" id="againBtn" href="javascript:void(0)">+ Make Another</a>
   </div>
 </div>
 
@@ -177,20 +172,21 @@ var IMGBB_KEY = 'd0d0fc17ec6a67badbdf6719039e3a07';
 document.getElementById('startBtn').addEventListener('click', function(e) {
   e.preventDefault();
   var k = document.getElementById('cfKey').value.trim();
-  var e2 = document.getElementById('cfEmail').value.trim();
-  if (!k || !e2) {
+  var em = document.getElementById('cfEmail').value.trim();
+  if (!k || !em) {
     document.getElementById('errMsg').style.display = 'block';
     return;
   }
   cfKey = k;
-  cfEmail = e2;
+  cfEmail = em;
   document.getElementById('setupScreen').style.display = 'none';
   document.getElementById('mainScreen').style.display = 'block';
 });
 
 document.getElementById('resetBtn').addEventListener('click', function(e) {
   e.preventDefault();
-  cfKey = ''; cfEmail = '';
+  cfKey = '';
+  cfEmail = '';
   document.getElementById('cfKey').value = '';
   document.getElementById('cfEmail').value = '';
   document.getElementById('mainScreen').style.display = 'none';
@@ -199,13 +195,15 @@ document.getElementById('resetBtn').addEventListener('click', function(e) {
 
 document.getElementById('workerName').addEventListener('input', function() {
   var n = this.value.trim();
-  document.getElementById('urlPreview').textContent = n ? 'https://' + n + '.workers.dev' : 'https://[名前].workers.dev';
+  document.getElementById('urlPreview').textContent = n ? 'https://' + n + '.workers.dev' : 'https://[name].workers.dev';
 });
+
 document.getElementById('navName').addEventListener('input', function() {
-  document.getElementById('prevName').textContent = this.value.trim() || '名前';
+  document.getElementById('prevName').textContent = this.value.trim() || 'Name';
 });
+
 document.getElementById('navHandle').addEventListener('input', function() {
-  document.getElementById('prevHandle').textContent = this.value.trim() || '@アカウント名';
+  document.getElementById('prevHandle').textContent = this.value.trim() || '@account';
 });
 
 document.getElementById('fileInput').addEventListener('change', function() {
@@ -231,7 +229,8 @@ document.getElementById('fileInput').addEventListener('change', function() {
   fetch('https://api.imgbb.com/1/upload', { method: 'POST', body: fd })
     .then(function(r) { return r.json(); })
     .then(function(data) {
-      clearInterval(iv); fill.style.width = '100%';
+      clearInterval(iv);
+      fill.style.width = '100%';
       if (data.success) {
         uploadedUrl = data.data.url;
         setTimeout(function() {
@@ -239,13 +238,13 @@ document.getElementById('fileInput').addEventListener('change', function() {
           document.getElementById('uploadOk').style.display = 'block';
           document.getElementById('uploadZone').style.borderColor = '#22c55e';
         }, 300);
-      } else throw new Error();
+      } else { throw new Error(); }
     })
     .catch(function() {
       clearInterval(iv);
       document.getElementById('progWrap').style.display = 'none';
       document.getElementById('uploadZone').style.borderColor = '#f87171';
-      alert('画像アップロード失敗');
+      alert('Upload failed. Please try again.');
     });
 });
 
@@ -254,16 +253,47 @@ function addLog(icon, text, type) {
   var d = document.createElement('div');
   d.className = 'll';
   d.innerHTML = '<span>' + icon + '</span><span class="lt ' + (type || '') + '">' + text + '</span>';
-  b.appendChild(d); b.scrollTop = b.scrollHeight;
+  b.appendChild(d);
+  b.scrollTop = b.scrollHeight;
 }
 
 function buildCode(img, aff, name, handle) {
   var n = name || 'TikTok';
   var h = handle || '@tiktok';
-  var workerHtml = '<!DOCTYPE html><html lang=ja><head><meta charset=UTF-8><meta name=viewport content=width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no><title>TikTok</title><style>*{margin:0;padding:0;box-sizing:border-box}html,body{width:100%;background:#fff;font-family:-apple-system,sans-serif}.nb{position:fixed;top:0;left:0;right:0;z-index:999;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid #f0f0f0}.ni{font-size:18px;color:#333;text-decoration:none}.nc{text-align:center;text-decoration:none}.nn{font-size:15px;font-weight:700;color:#000;line-height:1.2}.nh{font-size:11px;color:#888}.nr{display:flex;gap:14px;align-items:center}.ct{padding-top:52px}.ct a{display:block;width:100%;text-decoration:none}.ct img{width:100%;display:block}</style></head><body><div class=nb><a class=ni href=AFFLINK>&#8592;</a><a href=AFFLINK class=nc><div class=nn>NAVNAME</div><div class=nh>NAVHANDLE</div></a><div class=nr><a class=ni href=AFFLINK>&#128276;</a><a class=ni href=AFFLINK>&#8594;</a></div></div><div class=ct><a href=AFFLINK><img src=IMGURL alt=></a></div></body></html>';
+  var p1 = '<!DOCTYPE html><html><head><meta charset=UTF-8>';
+  var p2 = '<meta name=viewport content=width=device-width,initial-scale=1>';
+  var p3 = '<title>TikTok</title><style>*{margin:0;padding:0;box-sizing:border-box}';
+  var p4 = 'html,body{width:100%;background:#fff;font-family:-apple-system,sans-serif}';
+  var p5 = '.nb{position:fixed;top:0;left:0;right:0;z-index:999;background:#fff;';
+  var p6 = 'display:flex;align-items:center;justify-content:space-between;';
+  var p7 = 'padding:10px 16px;border-bottom:1px solid #f0f0f0}';
+  var p8 = '.ni{font-size:18px;color:#333;text-decoration:none}';
+  var p9 = '.nc{text-align:center;text-decoration:none}';
+  var pa = '.nn{font-size:15px;font-weight:700;color:#000}';
+  var pb = '.nh{font-size:11px;color:#888}';
+  var pc = '.nr{display:flex;gap:14px;align-items:center}';
+  var pd = '.ct{padding-top:52px}.ct a{display:block;width:100%;text-decoration:none}';
+  var pe = '.ct img{width:100%;display:block}</style></head><body>';
 
-workerHtml = workerHtml.split(‘AFFLINK’).join(aff).split(‘NAVNAME’).join(n).split(‘NAVHANDLE’).join(h).split(‘IMGURL’).join(img);
-return ’export default {\n  async fetch(request) {\n    const html = ’ + JSON.stringify(workerHtml) + ‘;\n    return new Response(html, { headers: { “Content-Type”: “text/html;charset=UTF-8”, “Cache-Control”: “no-cache” } });\n  }\n};\n’;
+var pf = ‘<div class=nb>’;
+var pg = ‘<a class=ni href="' + aff + '">\u2190</a>’;
+var ph = ‘<a href="' + aff + '" class=nc>’;
+var pi = ‘<div class=nn>’ + n + ‘</div>’;
+var pj = ‘<div class=nh>’ + h + ‘</div></a>’;
+var pk = ‘<div class=nr>’;
+var pl = ‘<a class=ni href="' + aff + '">\uD83D\uDD14</a>’;
+var pm = ‘<a class=ni href="' + aff + '">\u2192</a>’;
+var pn = ‘</div></div>’;
+var po = ‘<div class=ct><a href="' + aff + '">’;
+var pp = ‘<img src="' + img + '"></a></div></body></html>’;
+var html = p1+p2+p3+p4+p5+p6+p7+p8+p9+pa+pb+pc+pd+pe+pf+pg+ph+pi+pj+pk+pl+pm+pn+po+pp;
+var code = ‘export default {\n’;
+code += ’  async fetch(request) {\n’;
+code += ’    var html=’ + JSON.stringify(html) + ‘;\n’;
+code += ’    return new Response(html,{headers:{“Content-Type”:“text/html;charset=UTF-8”,“Cache-Control”:“no-cache”}});\n’;
+code += ’  }\n’;
+code += ‘};\n’;
+return code;
 }
 
 document.getElementById(‘deployBtn’).addEventListener(‘click’, function(e) {
@@ -272,26 +302,24 @@ var wName = document.getElementById(‘workerName’).value.trim();
 var navName = document.getElementById(‘navName’).value.trim();
 var navHandle = document.getElementById(‘navHandle’).value.trim();
 var aff = document.getElementById(‘affLink’).value.trim();
-if (!wName) { alert(‘Worker名を入力してください！’); return; }
-if (!uploadedUrl) { alert(‘画像をアップロードしてください！’); return; }
-if (!aff) { alert(‘アフィリンクを入力してください！’); return; }
-
+if (!wName) { alert(‘Enter Worker name!’); return; }
+if (!uploadedUrl) { alert(‘Upload an image!’); return; }
+if (!aff) { alert(‘Enter affiliate link!’); return; }
 var btn = document.getElementById(‘deployBtn’);
-btn.innerHTML = ‘<span class="spinner"></span>デプロイ中…’;
+btn.innerHTML = ‘<span class="spinner"></span>Deploying…’;
 document.getElementById(‘logWrap’).classList.add(‘show’);
 document.getElementById(‘successWrap’).classList.remove(‘show’);
 document.getElementById(‘logBox’).innerHTML = ‘’;
-
-addLog(‘🔑’, ‘API認証確認中…’);
+addLog(‘🔑’, ‘Checking API…’);
 fetch(‘https://api.cloudflare.com/client/v4/accounts’, {
 headers: { ‘X-Auth-Email’: cfEmail, ‘X-Auth-Key’: cfKey, ‘Content-Type’: ‘application/json’ }
 })
 .then(function(r) { return r.json(); })
 .then(function(d) {
-if (!d.success) throw new Error(’認証失敗: ’ + (d.errors && d.errors[0] ? d.errors[0].message : ‘’));
+if (!d.success) throw new Error(‘Auth failed: ’ + (d.errors && d.errors[0] ? d.errors[0].message : ‘’));
 var accountId = d.result[0].id;
-addLog(‘✅’, ‘アカウントOK’, ‘i’);
-addLog(‘🚀’, ‘”’ + wName + ‘” をデプロイ中…’);
+addLog(‘OK’, ‘Account OK’, ‘i’);
+addLog(‘🚀’, ‘Deploying “’ + wName + ‘”…’);
 var code = buildCode(uploadedUrl, aff, navName, navHandle);
 var fd = new FormData();
 fd.append(‘metadata’, new Blob([JSON.stringify({ main_module: ‘worker.js’ })], { type: ‘application/json’ }), ‘metadata.json’);
@@ -301,9 +329,9 @@ method: ‘PUT’, headers: { ‘X-Auth-Email’: cfEmail, ‘X-Auth-Key’: cfK
 })
 .then(function(r) { return r.json(); })
 .then(function(d2) {
-if (!d2.success) throw new Error(’デプロイ失敗: ’ + (d2.errors && d2.errors[0] ? d2.errors[0].message : ‘’));
-addLog(‘✅’, ‘デプロイ成功！’, ‘i’);
-addLog(‘🌐’, ‘サブドメイン有効化中…’);
+if (!d2.success) throw new Error(‘Deploy failed: ’ + (d2.errors && d2.errors[0] ? d2.errors[0].message : ‘’));
+addLog(‘OK’, ‘Deploy success!’, ‘i’);
+addLog(‘🌐’, ‘Enabling subdomain…’);
 return fetch(‘https://api.cloudflare.com/client/v4/accounts/’ + accountId + ‘/workers/scripts/’ + wName + ‘/subdomain’, {
 method: ‘POST’,
 headers: { ‘X-Auth-Email’: cfEmail, ‘X-Auth-Key’: cfKey, ‘Content-Type’: ‘application/json’ },
@@ -311,24 +339,24 @@ body: JSON.stringify({ enabled: true })
 });
 })
 .then(function() {
-addLog(‘✅’, ‘有効化完了’, ‘i’);
-addLog(‘⏳’, ‘反映待ち（10秒）…’, ‘m’);
+addLog(‘OK’, ‘Done!’, ‘i’);
+addLog(’…’, ‘Waiting 10s…’, ‘m’);
 return new Promise(function(resolve) { setTimeout(resolve, 10000); });
 })
 .then(function() {
 var url = ‘https://’ + wName + ‘.workers.dev’;
-addLog(‘🎉’, ’完成！ ’ + url);
+addLog(‘🎉’, ’Complete! ’ + url);
 document.getElementById(‘sUrl’).textContent = url;
 document.getElementById(‘openBtn’).href = url;
 document.getElementById(‘successWrap’).classList.add(‘show’);
 document.getElementById(‘successWrap’).scrollIntoView({ behavior: ‘smooth’ });
-btn.innerHTML = ‘🚀 自動デプロイ’;
+btn.innerHTML = ‘🚀 Auto Deploy’;
 });
 })
 .catch(function(err) {
-addLog(‘❌’, err.message, ‘e’);
-addLog(‘💡’, ‘APIキーかメールアドレスを確認してみて’, ‘m’);
-btn.innerHTML = ‘🚀 自動デプロイ’;
+addLog(‘ERR’, err.message, ‘e’);
+addLog(‘TIP’, ‘Check your API key and email’, ‘m’);
+btn.innerHTML = ‘🚀 Auto Deploy’;
 });
 });
 
@@ -338,11 +366,11 @@ var url = document.getElementById(‘sUrl’).textContent;
 var btn = this;
 if (navigator.clipboard) {
 navigator.clipboard.writeText(url).then(function() {
-btn.textContent = ‘✅ コピーしました！’;
-setTimeout(function() { btn.textContent = ‘📋 URLをコピー’; }, 2000);
-}).catch(function() { prompt(‘URLをコピーしてください:’, url); });
+btn.textContent = ‘Copied!’;
+setTimeout(function() { btn.textContent = ‘Copy URL’; }, 2000);
+}).catch(function() { prompt(‘Copy this URL:’, url); });
 } else {
-prompt(‘URLをコピーしてください:’, url);
+prompt(‘Copy this URL:’, url);
 }
 });
 
@@ -353,9 +381,9 @@ document.getElementById(‘navName’).value = ‘’;
 document.getElementById(‘navHandle’).value = ‘’;
 document.getElementById(‘affLink’).value = ‘’;
 uploadedUrl = ‘’;
-document.getElementById(‘urlPreview’).textContent = ‘https://[名前].workers.dev’;
-document.getElementById(‘prevName’).textContent = ‘名前’;
-document.getElementById(‘prevHandle’).textContent = ‘@アカウント名’;
+document.getElementById(‘urlPreview’).textContent = ‘https://[name].workers.dev’;
+document.getElementById(‘prevName’).textContent = ‘Name’;
+document.getElementById(‘prevHandle’).textContent = ‘@account’;
 document.getElementById(‘phoneImg’).style.display = ‘none’;
 document.getElementById(‘phoneEmpty’).style.display = ‘flex’;
 document.getElementById(‘uploadZone’).style.borderColor = ‘’;
