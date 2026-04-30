@@ -1,398 +1,294 @@
 <!DOCTYPE html>
-
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LP Deployer</title>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, sans-serif; background: #0a0a0a; color: #fff; min-height: 100vh; }
-#setupScreen { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; }
-.title { font-size: 28px; font-weight: 900; color: #fe2c55; margin-bottom: 6px; text-align: center; }
-.sub { font-size: 13px; color: #555; margin-bottom: 32px; text-align: center; }
-.box { background: #161616; border: 1px solid #222; border-radius: 20px; padding: 24px; width: 100%; max-width: 340px; }
-.lbl { font-size: 11px; font-weight: 900; color: #fe2c55; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; display: block; }
-input { width: 100%; background: #0d0d0d; border: 1.5px solid #2a2a2a; border-radius: 12px; color: #fff; font-size: 16px; padding: 14px 16px; outline: none; margin-bottom: 14px; -webkit-appearance: none; display: block; font-family: -apple-system, sans-serif; }
-input:focus { border-color: #fe2c55; }
-input::placeholder { color: #444; }
-.err { color: #f87171; font-size: 13px; text-align: center; margin-bottom: 10px; display: none; }
-a.btn { display: block; width: 100%; text-align: center; text-decoration: none; border-radius: 12px; font-size: 16px; font-weight: 900; padding: 16px; cursor: pointer; font-family: -apple-system, sans-serif; }
-a.btn-red { background: #fe2c55; color: #fff; }
-a.btn-green { background: #22c55e; color: #000; margin-bottom: 10px; }
-a.btn-dark { background: #1a1a1a; border: 1px solid #2a2a2a; color: #888; margin-bottom: 10px; }
-a.btn-outline { background: #163a16; border: 1px solid #1e4a1e; color: #22c55e; margin-bottom: 10px; text-align: center; }
-a.btn-sm { background: #161616; border: 1px solid #222; color: #555; font-size: 12px; padding: 6px 10px; border-radius: 8px; }
-#mainScreen { display: none; padding: 20px 16px 80px; }
-.topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-.topbar-title { font-size: 18px; font-weight: 900; color: #fe2c55; }
-.card { background: #161616; border: 1px solid #222; border-radius: 16px; padding: 18px; margin-bottom: 12px; }
-.card-label { font-size: 11px; font-weight: 900; color: #fe2c55; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
-.row2 { display: flex; gap: 8px; }
-.row2 .fw { flex: 1; }
-.fw { margin-bottom: 10px; }
-.fw:last-child { margin-bottom: 0; }
-.hint { font-size: 11px; color: #444; margin-top: 6px; line-height: 1.5; }
-.upload-zone { border: 2px dashed #2a2a2a; border-radius: 12px; padding: 24px 16px; text-align: center; position: relative; cursor: pointer; }
-.upload-zone input[type=file] { position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; font-size: 16px; }
-.upload-icon { font-size: 28px; margin-bottom: 8px; }
-.upload-text { font-size: 13px; color: #555; }
-.upload-text b { color: #fe2c55; }
-.prog-wrap { display: none; margin-top: 10px; }
-.prog-bar { height: 4px; background: #1a1a1a; border-radius: 2px; overflow: hidden; }
-.prog-fill { height: 100%; background: #fe2c55; width: 0; transition: width 0.3s; border-radius: 2px; }
-.upload-ok { display: none; margin-top: 10px; font-size: 12px; color: #22c55e; text-align: center; }
-.phone-wrap { margin-top: 14px; border-radius: 18px; overflow: hidden; border: 2px solid #2a2a2a; background: #fff; max-width: 200px; margin-left: auto; margin-right: auto; }
-.phone-nav { background: #fff; padding: 9px 12px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #eee; }
-.pni { font-size: 13px; color: #333; }
-.pnc { text-align: center; }
-.pnn { font-size: 11px; font-weight: 900; color: #000; line-height: 1.2; }
-.pnh { font-size: 9px; color: #888; }
-.pnr { display: flex; gap: 8px; align-items: center; }
-.phone-img { width: 100%; aspect-ratio: 9/14; background: #f0f0f0; overflow: hidden; }
-.phone-img img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: none; }
-.phone-empty { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #ccc; font-size: 10px; gap: 4px; }
-.url-preview { margin-top: 10px; background: #1a0810; border: 1px solid #2a1020; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #fe2c55; font-weight: 700; word-break: break-all; }
-a.btn-deploy { display: block; width: 100%; text-align: center; text-decoration: none; background: linear-gradient(135deg, #fe2c55, #ff6b35); border-radius: 14px; color: #fff; font-size: 17px; font-weight: 900; padding: 20px; margin-top: 4px; font-family: -apple-system, sans-serif; }
-.log-wrap { display: none; margin-top: 12px; }
-.log-wrap.show { display: block; }
-.log-box { background: #060f06; border: 1px solid #1a3a1a; border-radius: 10px; padding: 14px; font-family: monospace; font-size: 11px; line-height: 2; max-height: 180px; overflow-y: auto; }
-.ll { display: flex; gap: 8px; }
-.lt { color: #7ec87e; word-break: break-all; }
-.lt.e { color: #f87171; }
-.lt.i { color: #60a5fa; }
-.lt.m { color: #444; }
-.success-wrap { display: none; background: #071a07; border: 1px solid #1a4a1a; border-radius: 16px; padding: 22px 18px; margin-top: 12px; text-align: center; }
-.success-wrap.show { display: block; }
-.si { font-size: 48px; margin-bottom: 10px; }
-.st { font-size: 20px; font-weight: 900; color: #22c55e; margin-bottom: 14px; }
-.su { background: #0a250a; border: 1px solid #1e4a1e; border-radius: 10px; padding: 14px; font-size: 14px; color: #22c55e; font-weight: 700; word-break: break-all; margin-bottom: 12px; }
-.spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 6px; }
-@keyframes spin { to { transform: rotate(360deg); } }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#fff;min-height:100vh}
+#s1{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px}
+#s2{display:none;padding:20px 16px 80px}
+.ttl{font-size:28px;font-weight:900;color:#fe2c55;margin-bottom:6px;text-align:center}
+.sub{font-size:13px;color:#555;margin-bottom:32px;text-align:center}
+.bx{background:#161616;border:1px solid #222;border-radius:20px;padding:24px;width:100%;max-width:340px}
+.lbl{font-size:11px;font-weight:900;color:#fe2c55;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;display:block}
+input{width:100%;background:#0d0d0d;border:1.5px solid #2a2a2a;border-radius:12px;color:#fff;font-size:16px;padding:14px 16px;outline:none;margin-bottom:14px;-webkit-appearance:none;display:block;font-family:-apple-system,sans-serif}
+input:focus{border-color:#fe2c55}
+input::placeholder{color:#444}
+button{display:block;width:100%;text-align:center;border-radius:12px;font-size:16px;font-weight:900;padding:16px;cursor:pointer;font-family:-apple-system,sans-serif;border:none}
+.red{background:#fe2c55;color:#fff}
+.grn{background:#22c55e;color:#000;margin-bottom:10px}
+.drk{background:#1a1a1a;color:#888;margin-bottom:10px}
+.sm{background:#161616;color:#555;font-size:12px;padding:6px 10px;border-radius:8px;width:auto}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.ttl2{font-size:18px;font-weight:900;color:#fe2c55}
+.card{background:#161616;border:1px solid #222;border-radius:16px;padding:18px;margin-bottom:12px}
+.clbl{font-size:11px;font-weight:900;color:#fe2c55;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px}
+.row2{display:flex;gap:8px}
+.fw{margin-bottom:10px}
+.fw:last-child{margin-bottom:0}
+.hint{font-size:11px;color:#444;margin-top:6px}
+.uzone{border:2px dashed #2a2a2a;border-radius:12px;padding:24px 16px;text-align:center;position:relative;cursor:pointer}
+.uzone input[type=file]{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;font-size:16px}
+.prog{display:none;margin-top:10px}
+.pbar{height:4px;background:#1a1a1a;border-radius:2px;overflow:hidden}
+.pfil{height:100%;background:#fe2c55;width:0;transition:width 0.3s;border-radius:2px}
+.uok{display:none;margin-top:10px;font-size:12px;color:#22c55e;text-align:center}
+.phone{margin-top:14px;border-radius:18px;overflow:hidden;border:2px solid #2a2a2a;background:#fff;max-width:200px;margin-left:auto;margin-right:auto}
+.pnav{background:#fff;padding:9px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #eee}
+.pctr{text-align:center}
+.pnam{font-size:11px;font-weight:900;color:#000;line-height:1.2}
+.phnd{font-size:9px;color:#888}
+.prgt{display:flex;gap:8px}
+.pimg{width:100%;aspect-ratio:9/14;background:#f0f0f0;overflow:hidden}
+.pimg img{width:100%;height:100%;object-fit:cover;object-position:top;display:none}
+.pmt{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#ccc;font-size:10px;gap:4px}
+.uprv{margin-top:10px;background:#1a0810;border:1px solid #2a1020;border-radius:8px;padding:10px 14px;font-size:12px;color:#fe2c55;font-weight:700;word-break:break-all}
+.dbtn{width:100%;background:linear-gradient(135deg,#fe2c55,#ff6b35);border-radius:14px;color:#fff;font-size:17px;font-weight:900;padding:20px;margin-top:4px;border:none;cursor:pointer;display:block;font-family:-apple-system,sans-serif}
+.log{display:none;margin-top:12px}
+.log.on{display:block}
+.lbox{background:#060f06;border:1px solid #1a3a1a;border-radius:10px;padding:14px;font-family:monospace;font-size:11px;line-height:2;max-height:180px;overflow-y:auto}
+.ll{display:flex;gap:8px}
+.lt{color:#7ec87e;word-break:break-all}
+.lt.e{color:#f87171}
+.lt.i{color:#60a5fa}
+.lt.m{color:#444}
+.suc{display:none;background:#071a07;border:1px solid #1a4a1a;border-radius:16px;padding:22px 18px;margin-top:12px;text-align:center}
+.suc.on{display:block}
+.surl{background:#0a250a;border:1px solid #1e4a1e;border-radius:10px;padding:14px;font-size:14px;color:#22c55e;font-weight:700;word-break:break-all;margin-bottom:12px}
+.spin{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:sp 0.7s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes sp{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
-
-<div id="setupScreen">
-  <div class="title">&#x25B6; LP Deployer</div>
-  <div class="sub">TikTok LP Auto Deploy Tool</div>
-  <div class="box">
+<div id="s1">
+  <div class="ttl">LP Deployer</div>
+  <div class="sub">TikTok LP Auto Deploy</div>
+  <div class="bx">
     <span class="lbl">Cloudflare API Key</span>
-    <input type="password" id="cfKey" placeholder="Global API Key" autocorrect="off" autocapitalize="off" spellcheck="false">
+    <input type="password" id="k" placeholder="Global API Key" autocorrect="off" autocapitalize="off" spellcheck="false">
     <span class="lbl">Email</span>
-    <input type="email" id="cfEmail" placeholder="email@example.com" autocorrect="off" spellcheck="false">
-    <div class="err" id="errMsg">Please enter API Key and Email</div>
-    <a class="btn btn-red" id="startBtn" href="javascript:void(0)">Start &#x2192;</a>
+    <input type="email" id="em" placeholder="email@example.com" autocorrect="off" spellcheck="false">
+    <button class="red" id="go" type="button">Start</button>
   </div>
 </div>
-
-<div id="mainScreen">
+<div id="s2">
   <div class="topbar">
-    <div class="topbar-title">&#x25B6; LP Deployer</div>
-    <a class="btn btn-sm" id="resetBtn" href="javascript:void(0)">Change API</a>
+    <div class="ttl2">LP Deployer</div>
+    <button class="sm" id="back" type="button">Change API</button>
   </div>
-
   <div class="card">
-    <div class="card-label">&#x2460; Worker Name (URL)</div>
-    <div class="fw"><input type="text" id="workerName" placeholder="e.g. tiktok-minyan221" autocorrect="off" autocapitalize="off" spellcheck="false" style="margin-bottom:0"></div>
-    <div class="url-preview" id="urlPreview">https://[name].workers.dev</div>
+    <div class="clbl">1. Worker Name</div>
+    <div class="fw"><input type="text" id="wn" placeholder="e.g. tiktok-minyan221" autocorrect="off" autocapitalize="off" spellcheck="false" style="margin-bottom:0"></div>
+    <div class="uprv" id="up">https://[name].workers.dev</div>
   </div>
-
   <div class="card">
-    <div class="card-label">&#x2461; Nav Bar</div>
+    <div class="clbl">2. Nav Bar</div>
     <div class="row2">
-      <div class="fw"><input type="text" id="navName" placeholder="Display name" style="margin-bottom:0"></div>
-      <div class="fw"><input type="text" id="navHandle" placeholder="@account" autocorrect="off" autocapitalize="off" spellcheck="false" style="margin-bottom:0"></div>
+      <div class="fw" style="flex:1"><input type="text" id="nn" placeholder="Name" style="margin-bottom:0"></div>
+      <div class="fw" style="flex:1"><input type="text" id="nh" placeholder="@account" autocorrect="off" autocapitalize="off" spellcheck="false" style="margin-bottom:0"></div>
     </div>
   </div>
-
   <div class="card">
-    <div class="card-label">&#x2462; LP Image</div>
-    <div class="upload-zone" id="uploadZone">
-      <input type="file" accept="image/*" id="fileInput">
-      <div class="upload-icon">&#x1F4C1;</div>
-      <div class="upload-text"><b>Tap to select image</b><br>PNG / JPG</div>
+    <div class="clbl">3. LP Image</div>
+    <div class="uzone" id="uz">
+      <input type="file" accept="image/*" id="fi">
+      <div style="font-size:28px;margin-bottom:8px">&#128193;</div>
+      <div style="font-size:13px;color:#555"><b style="color:#fe2c55">Tap to select</b><br>PNG / JPG</div>
     </div>
-    <div class="prog-wrap" id="progWrap">
+    <div class="prog" id="pg">
       <div style="font-size:11px;color:#555;margin-bottom:6px;text-align:center">Uploading...</div>
-      <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
+      <div class="pbar"><div class="pfil" id="pf"></div></div>
     </div>
-    <div class="upload-ok" id="uploadOk">&#x2705; Upload complete!</div>
-    <div class="phone-wrap">
-      <div class="phone-nav">
-        <span class="pni">&#x2190;</span>
-        <div class="pnc">
-          <div class="pnn" id="prevName">Name</div>
-          <div class="pnh" id="prevHandle">@account</div>
-        </div>
-        <div class="pnr">
-          <span class="pni">&#x1F514;</span>
-          <span class="pni">&#x2192;</span>
-        </div>
+    <div class="uok" id="uo">Upload complete!</div>
+    <div class="phone">
+      <div class="pnav">
+        <span style="font-size:13px;color:#333">&#8592;</span>
+        <div class="pctr"><div class="pnam" id="pn">Name</div><div class="phnd" id="ph">@account</div></div>
+        <div class="prgt"><span style="font-size:13px;color:#333">&#128276;</span><span style="font-size:13px;color:#333">&#8594;</span></div>
       </div>
-      <div class="phone-img">
-        <div class="phone-empty" id="phoneEmpty">
-          <span style="font-size:22px">&#x1F5BC;</span>
-          <span>Select image</span>
-        </div>
-        <img id="phoneImg" alt="">
+      <div class="pimg">
+        <div class="pmt" id="pe"><span style="font-size:22px">&#128444;</span><span>Select image</span></div>
+        <img id="pi" alt="">
       </div>
     </div>
   </div>
-
   <div class="card">
-    <div class="card-label">&#x2463; Affiliate Link</div>
-    <div class="fw"><input type="text" id="affLink" placeholder="https://lite.tiktok.com/t/..." autocorrect="off" autocapitalize="off" spellcheck="false" style="margin-bottom:0"></div>
-    <div class="hint">Tapping anywhere goes to this URL</div>
+    <div class="clbl">4. Affiliate Link</div>
+    <div class="fw"><input type="text" id="al" placeholder="https://lite.tiktok.com/t/..." autocorrect="off" autocapitalize="off" spellcheck="false" style="margin-bottom:0"></div>
   </div>
-
-<a class="btn btn-deploy" id="deployBtn" href="javascript:void(0)">🚀 Auto Deploy</a>
-
-  <div class="log-wrap" id="logWrap">
-    <div style="font-size:11px;color:#fe2c55;font-weight:900;letter-spacing:1px;margin-bottom:8px">&#x1F4E1; Deploy Log</div>
-    <div class="log-box" id="logBox"></div>
+  <button class="dbtn" id="dep" type="button">Deploy</button>
+  <div class="log" id="lg">
+    <div style="font-size:11px;color:#fe2c55;font-weight:900;margin-bottom:8px">Log</div>
+    <div class="lbox" id="lb"></div>
   </div>
-
-  <div class="success-wrap" id="successWrap">
-    <div class="si">&#x1F389;</div>
-    <div class="st">Deploy Complete!</div>
-    <div class="su" id="sUrl"></div>
-    <a class="btn btn-green" id="copyBtn" href="javascript:void(0)">&#x1F4CB; Copy URL</a>
-    <a class="btn btn-outline" id="openBtn" href="#" target="_blank">&#x1F517; Open LP</a>
-    <a class="btn btn-dark" id="againBtn" href="javascript:void(0)">+ Make Another</a>
+  <div class="suc" id="sc">
+    <div style="font-size:48px;margin-bottom:10px">&#127881;</div>
+    <div style="font-size:20px;font-weight:900;color:#22c55e;margin-bottom:14px">Deploy Complete!</div>
+    <div class="surl" id="su"></div>
+    <button class="grn" id="cp" type="button">Copy URL</button>
+    <a class="btn drk" id="op" href="#" target="_blank" style="display:block;text-decoration:none;margin-bottom:10px">Open LP</a>
+    <button class="drk" id="ag" type="button">Make Another</button>
   </div>
 </div>
-
 <script>
-var cfKey = '';
-var cfEmail = '';
-var uploadedUrl = '';
-var IMGBB_KEY = 'd0d0fc17ec6a67badbdf6719039e3a07';
-
-document.getElementById('startBtn').addEventListener('click', function(e) {
-  e.preventDefault();
-  var k = document.getElementById('cfKey').value.trim();
-  var em = document.getElementById('cfEmail').value.trim();
-  if (!k || !em) {
-    document.getElementById('errMsg').style.display = 'block';
-    return;
-  }
-  cfKey = k;
-  cfEmail = em;
-  document.getElementById('setupScreen').style.display = 'none';
-  document.getElementById('mainScreen').style.display = 'block';
-});
-
-document.getElementById('resetBtn').addEventListener('click', function(e) {
-  e.preventDefault();
-  cfKey = '';
-  cfEmail = '';
-  document.getElementById('cfKey').value = '';
-  document.getElementById('cfEmail').value = '';
-  document.getElementById('mainScreen').style.display = 'none';
-  document.getElementById('setupScreen').style.display = 'flex';
-});
-
-document.getElementById('workerName').addEventListener('input', function() {
-  var n = this.value.trim();
-  document.getElementById('urlPreview').textContent = n ? 'https://' + n + '.workers.dev' : 'https://[name].workers.dev';
-});
-
-document.getElementById('navName').addEventListener('input', function() {
-  document.getElementById('prevName').textContent = this.value.trim() || 'Name';
-});
-
-document.getElementById('navHandle').addEventListener('input', function() {
-  document.getElementById('prevHandle').textContent = this.value.trim() || '@account';
-});
-
-document.getElementById('fileInput').addEventListener('change', function() {
-  var file = this.files[0];
-  if (!file) return;
-  var reader = new FileReader();
-  reader.onload = function(ev) {
-    var img = document.getElementById('phoneImg');
-    img.src = ev.target.result;
-    img.style.display = 'block';
-    document.getElementById('phoneEmpty').style.display = 'none';
-  };
-  reader.readAsDataURL(file);
-  document.getElementById('progWrap').style.display = 'block';
-  document.getElementById('uploadOk').style.display = 'none';
-  document.getElementById('uploadZone').style.borderColor = '#fe2c55';
-  var p = 0;
-  var fill = document.getElementById('progFill');
-  var iv = setInterval(function() { p = Math.min(p + Math.random() * 12, 85); fill.style.width = p + '%'; }, 200);
-  var fd = new FormData();
-  fd.append('image', file);
-  fd.append('key', IMGBB_KEY);
-  fetch('https://api.imgbb.com/1/upload', { method: 'POST', body: fd })
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      clearInterval(iv);
-      fill.style.width = '100%';
-      if (data.success) {
-        uploadedUrl = data.data.url;
-        setTimeout(function() {
-          document.getElementById('progWrap').style.display = 'none';
-          document.getElementById('uploadOk').style.display = 'block';
-          document.getElementById('uploadZone').style.borderColor = '#22c55e';
-        }, 300);
-      } else { throw new Error(); }
+var K='',E='',IM='',IK='d0d0fc17ec6a67badbdf6719039e3a07';
+document.getElementById('go').onclick=function(){
+  var k=document.getElementById('k').value.trim();
+  var e=document.getElementById('em').value.trim();
+  if(!k||!e){alert('Enter API Key and Email');return;}
+  K=k;E=e;
+  document.getElementById('s1').style.display='none';
+  document.getElementById('s2').style.display='block';
+};
+document.getElementById('back').onclick=function(){
+  K='';E='';
+  document.getElementById('s2').style.display='none';
+  document.getElementById('s1').style.display='flex';
+};
+document.getElementById('wn').oninput=function(){
+  var v=this.value.trim();
+  document.getElementById('up').textContent=v?'https://'+v+'.workers.dev':'https://[name].workers.dev';
+};
+document.getElementById('nn').oninput=function(){document.getElementById('pn').textContent=this.value.trim()||'Name';};
+document.getElementById('nh').oninput=function(){document.getElementById('ph').textContent=this.value.trim()||'@account';};
+document.getElementById('fi').onchange=function(){
+  var f=this.files[0];if(!f)return;
+  var r=new FileReader();
+  r.onload=function(e){var i=document.getElementById('pi');i.src=e.target.result;i.style.display='block';document.getElementById('pe').style.display='none';};
+  r.readAsDataURL(f);
+  document.getElementById('pg').style.display='block';
+  document.getElementById('uo').style.display='none';
+  document.getElementById('uz').style.borderColor='#fe2c55';
+  var p=0,fl=document.getElementById('pf');
+  var iv=setInterval(function(){p=Math.min(p+Math.random()*12,85);fl.style.width=p+'%';},200);
+  var fd=new FormData();fd.append('image',f);fd.append('key',IK);
+  fetch('https://api.imgbb.com/1/upload',{method:'POST',body:fd})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      clearInterval(iv);fl.style.width='100%';
+      if(d.success){IM=d.data.url;setTimeout(function(){document.getElementById('pg').style.display='none';document.getElementById('uo').style.display='block';document.getElementById('uz').style.borderColor='#22c55e';},300);}
+      else throw new Error();
+    }).catch(function(){clearInterval(iv);document.getElementById('pg').style.display='none';document.getElementById('uz').style.borderColor='#f87171';alert('Upload failed');});
+};
+function lg(i,t,c){var b=document.getElementById('lb'),d=document.createElement('div');d.className='ll';d.innerHTML='<span>'+i+'</span><span class="lt '+(c||'')+'">'+t+'</span>';b.appendChild(d);b.scrollTop=b.scrollHeight;}
+function wc(img,aff,n,h){
+  var lines=[
+    'export default {',
+    '  async fetch(request) {',
+    '    var I='+JSON.stringify(img)+';',
+    '    var A='+JSON.stringify(aff)+';',
+    '    var N='+JSON.stringify(n)+';',
+    '    var H='+JSON.stringify(h)+';',
+    '    var s="<!DOCTYPE html><html><head>";',
+    '    s+="<meta charset=UTF-8>";',
+    '    s+="<meta name=viewport content=width=device-width,initial-scale=1>";',
+    '    s+="<title>TikTok</title>";',
+    '    s+="<style>";',
+    '    s+="*{margin:0;padding:0;box-sizing:border-box}";',
+    '    s+="html,body{width:100%;background:#fff;font-family:-apple-system,sans-serif}";',
+    '    s+=".nb{position:fixed;top:0;left:0;right:0;z-index:999;background:#fff;";',
+    '    s+="display:flex;align-items:center;justify-content:space-between;";',
+    '    s+="padding:10px 16px;border-bottom:1px solid #f0f0f0}";',
+    '    s+=".ni{font-size:18px;color:#333;text-decoration:none}";',
+    '    s+=".nc{text-align:center;text-decoration:none}";',
+    '    s+=".nn{font-size:15px;font-weight:700;color:#000}";',
+    '    s+=".nh{font-size:11px;color:#888}";',
+    '    s+=".nr{display:flex;gap:14px;align-items:center}";',
+    '    s+=".ct{padding-top:52px}";',
+    '    s+=".ct a{display:block;width:100%;text-decoration:none}";',
+    '    s+=".ct img{width:100%;display:block}";',
+    '    s+="</style></head><body>";',
+    '    s+="<div class=nb>";',
+    '    s+="<a class=ni href="+JSON.stringify(A)+">&larr;</a>";',
+    '    s+="<a href="+JSON.stringify(A)+" class=nc>";',
+    '    s+="<div class=nn>"+N+"</div>";',
+    '    s+="<div class=nh>"+H+"</div></a>";',
+    '    s+="<div class=nr>";',
+    '    s+="<a class=ni href="+JSON.stringify(A)+">&#128276;</a>";',
+    '    s+="<a class=ni href="+JSON.stringify(A)+">&rarr;</a>";',
+    '    s+="</div></div>";',
+    '    s+="<div class=ct><a href="+JSON.stringify(A)+">";',
+    '    s+="<img src="+JSON.stringify(I)+"></a></div>";',
+    '    s+="</body></html>";',
+    '    return new Response(s,{headers:{"Content-Type":"text/html;charset=UTF-8","Cache-Control":"no-cache"}});',
+    '  }',
+    '};'
+  ];
+  return lines.join('\n');
+}
+document.getElementById('dep').onclick=function(){
+  var wn=document.getElementById('wn').value.trim();
+  var nn=document.getElementById('nn').value.trim()||'TikTok';
+  var nh=document.getElementById('nh').value.trim()||'@tiktok';
+  var al=document.getElementById('al').value.trim();
+  if(!wn){alert('Enter Worker name');return;}
+  if(!IM){alert('Upload image first');return;}
+  if(!al){alert('Enter affiliate link');return;}
+  var btn=document.getElementById('dep');
+  btn.innerHTML='<span class="spin"></span>Deploying...';
+  btn.disabled=true;
+  document.getElementById('lg').classList.add('on');
+  document.getElementById('sc').classList.remove('on');
+  document.getElementById('lb').innerHTML='';
+  lg('...','Checking API...');
+  fetch('https://api.cloudflare.com/client/v4/accounts',{headers:{'X-Auth-Email':E,'X-Auth-Key':K,'Content-Type':'application/json'}})
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(!d.success)throw new Error('Auth failed: '+(d.errors&&d.errors[0]?d.errors[0].message:''));
+    var aid=d.result[0].id;
+    lg('OK','Account OK','i');
+    lg('...','Deploying "'+wn+'"...');
+    var code=wc(IM,al,nn,nh);
+    var fd=new FormData();
+    fd.append('metadata',new Blob([JSON.stringify({main_module:'worker.js'})],{type:'application/json'}),'metadata.json');
+    fd.append('worker.js',new Blob([code],{type:'application/javascript+module'}),'worker.js');
+    return fetch('https://api.cloudflare.com/client/v4/accounts/'+aid+'/workers/scripts/'+wn,{method:'PUT',headers:{'X-Auth-Email':E,'X-Auth-Key':K},body:fd})
+    .then(function(r){return r.json();})
+    .then(function(d2){
+      if(!d2.success)throw new Error('Deploy failed: '+(d2.errors&&d2.errors[0]?d2.errors[0].message:''));
+      lg('OK','Deploy success!','i');
+      return fetch('https://api.cloudflare.com/client/v4/accounts/'+aid+'/workers/scripts/'+wn+'/subdomain',{method:'POST',headers:{'X-Auth-Email':E,'X-Auth-Key':K,'Content-Type':'application/json'},body:JSON.stringify({enabled:true})});
     })
-    .catch(function() {
-      clearInterval(iv);
-      document.getElementById('progWrap').style.display = 'none';
-      document.getElementById('uploadZone').style.borderColor = '#f87171';
-      alert('Upload failed. Please try again.');
+    .then(function(){
+      lg('...','Waiting 10s...','m');
+      return new Promise(function(res){setTimeout(res,10000);});
+    })
+    .then(function(){
+      var url='https://'+wn+'.workers.dev';
+      lg('OK','Done! '+url,'i');
+      document.getElementById('su').textContent=url;
+      document.getElementById('op').href=url;
+      document.getElementById('sc').classList.add('on');
+      document.getElementById('sc').scrollIntoView({behavior:'smooth'});
+      btn.innerHTML='Deploy';btn.disabled=false;
     });
-});
-
-function addLog(icon, text, type) {
-  var b = document.getElementById('logBox');
-  var d = document.createElement('div');
-  d.className = 'll';
-  d.innerHTML = '<span>' + icon + '</span><span class="lt ' + (type || '') + '">' + text + '</span>';
-  b.appendChild(d);
-  b.scrollTop = b.scrollHeight;
-}
-
-function buildCode(img, aff, name, handle) {
-  var n = name || 'TikTok';
-  var h = handle || '@tiktok';
-  var p1 = '<!DOCTYPE html><html><head><meta charset=UTF-8>';
-  var p2 = '<meta name=viewport content=width=device-width,initial-scale=1>';
-  var p3 = '<title>TikTok</title><style>*{margin:0;padding:0;box-sizing:border-box}';
-  var p4 = 'html,body{width:100%;background:#fff;font-family:-apple-system,sans-serif}';
-  var p5 = '.nb{position:fixed;top:0;left:0;right:0;z-index:999;background:#fff;';
-  var p6 = 'display:flex;align-items:center;justify-content:space-between;';
-  var p7 = 'padding:10px 16px;border-bottom:1px solid #f0f0f0}';
-  var p8 = '.ni{font-size:18px;color:#333;text-decoration:none}';
-  var p9 = '.nc{text-align:center;text-decoration:none}';
-  var pa = '.nn{font-size:15px;font-weight:700;color:#000}';
-  var pb = '.nh{font-size:11px;color:#888}';
-  var pc = '.nr{display:flex;gap:14px;align-items:center}';
-  var pd = '.ct{padding-top:52px}.ct a{display:block;width:100%;text-decoration:none}';
-  var pe = '.ct img{width:100%;display:block}</style></head><body>';
-
-var pf = ‘<div class=nb>’;
-var pg = ‘<a class=ni href="' + aff + '">&larr;</a>’;
-var ph = ‘<a href="' + aff + '" class=nc>’;
-var pi = ‘<div class=nn>’ + n + ‘</div>’;
-var pj = ‘<div class=nh>’ + h + ‘</div></a>’;
-var pk = ‘<div class=nr>’;
-var pl = ‘<a class=ni href="' + aff + '">&#128276;</a>’;
-var pm = ‘<a class=ni href="' + aff + '">&rarr;</a>’;
-var pn = ‘</div></div>’;
-var po = ‘<div class=ct><a href="' + aff + '">’;
-var pp = ‘<img src="' + img + '"></a></div></body></html>’;
-var html = p1+p2+p3+p4+p5+p6+p7+p8+p9+pa+pb+pc+pd+pe+pf+pg+ph+pi+pj+pk+pl+pm+pn+po+pp;
-var code = ‘export default {\n’;
-code += ’  async fetch(request) {\n’;
-code += ’    var html=’ + JSON.stringify(html) + ‘;\n’;
-code += ’    return new Response(html,{headers:{“Content-Type”:“text/html;charset=UTF-8”,“Cache-Control”:“no-cache”}});\n’;
-code += ’  }\n’;
-code += ‘};\n’;
-return code;
-}
-
-document.getElementById(‘deployBtn’).addEventListener(‘click’, function(e) {
-e.preventDefault();
-var wName = document.getElementById(‘workerName’).value.trim();
-var navName = document.getElementById(‘navName’).value.trim();
-var navHandle = document.getElementById(‘navHandle’).value.trim();
-var aff = document.getElementById(‘affLink’).value.trim();
-if (!wName) { alert(‘Enter Worker name!’); return; }
-if (!uploadedUrl) { alert(‘Upload an image!’); return; }
-if (!aff) { alert(‘Enter affiliate link!’); return; }
-var btn = document.getElementById(‘deployBtn’);
-btn.innerHTML = ‘<span class="spinner"></span>Deploying…’;
-document.getElementById(‘logWrap’).classList.add(‘show’);
-document.getElementById(‘successWrap’).classList.remove(‘show’);
-document.getElementById(‘logBox’).innerHTML = ‘’;
-addLog(‘🔑’, ‘Checking API…’);
-fetch(‘https://api.cloudflare.com/client/v4/accounts’, {
-headers: { ‘X-Auth-Email’: cfEmail, ‘X-Auth-Key’: cfKey, ‘Content-Type’: ‘application/json’ }
-})
-.then(function(r) { return r.json(); })
-.then(function(d) {
-if (!d.success) throw new Error(‘Auth failed: ’ + (d.errors && d.errors[0] ? d.errors[0].message : ‘’));
-var accountId = d.result[0].id;
-addLog(‘OK’, ‘Account OK’, ‘i’);
-addLog(‘🚀’, ‘Deploying “’ + wName + ‘”…’);
-var code = buildCode(uploadedUrl, aff, navName, navHandle);
-var fd = new FormData();
-fd.append(‘metadata’, new Blob([JSON.stringify({ main_module: ‘worker.js’ })], { type: ‘application/json’ }), ‘metadata.json’);
-fd.append(‘worker.js’, new Blob([code], { type: ‘application/javascript+module’ }), ‘worker.js’);
-return fetch(‘https://api.cloudflare.com/client/v4/accounts/’ + accountId + ‘/workers/scripts/’ + wName, {
-method: ‘PUT’, headers: { ‘X-Auth-Email’: cfEmail, ‘X-Auth-Key’: cfKey }, body: fd
-})
-.then(function(r) { return r.json(); })
-.then(function(d2) {
-if (!d2.success) throw new Error(‘Deploy failed: ’ + (d2.errors && d2.errors[0] ? d2.errors[0].message : ‘’));
-addLog(‘OK’, ‘Deploy success!’, ‘i’);
-addLog(‘🌐’, ‘Enabling subdomain…’);
-return fetch(‘https://api.cloudflare.com/client/v4/accounts/’ + accountId + ‘/workers/scripts/’ + wName + ‘/subdomain’, {
-method: ‘POST’,
-headers: { ‘X-Auth-Email’: cfEmail, ‘X-Auth-Key’: cfKey, ‘Content-Type’: ‘application/json’ },
-body: JSON.stringify({ enabled: true })
-});
-})
-.then(function() {
-addLog(‘OK’, ‘Done!’, ‘i’);
-addLog(’…’, ‘Waiting 10s…’, ‘m’);
-return new Promise(function(resolve) { setTimeout(resolve, 10000); });
-})
-.then(function() {
-var url = ‘https://’ + wName + ‘.workers.dev’;
-addLog(‘🎉’, ’Complete! ’ + url);
-document.getElementById(‘sUrl’).textContent = url;
-document.getElementById(‘openBtn’).href = url;
-document.getElementById(‘successWrap’).classList.add(‘show’);
-document.getElementById(‘successWrap’).scrollIntoView({ behavior: ‘smooth’ });
-btn.innerHTML = ‘🚀 Auto Deploy’;
-});
-})
-.catch(function(err) {
-addLog(‘ERR’, err.message, ‘e’);
-addLog(‘TIP’, ‘Check your API key and email’, ‘m’);
-btn.innerHTML = ‘🚀 Auto Deploy’;
-});
-});
-
-document.getElementById(‘copyBtn’).addEventListener(‘click’, function(e) {
-e.preventDefault();
-var url = document.getElementById(‘sUrl’).textContent;
-var btn = this;
-if (navigator.clipboard) {
-navigator.clipboard.writeText(url).then(function() {
-btn.textContent = ‘Copied!’;
-setTimeout(function() { btn.textContent = ‘Copy URL’; }, 2000);
-}).catch(function() { prompt(‘Copy this URL:’, url); });
-} else {
-prompt(‘Copy this URL:’, url);
-}
-});
-
-document.getElementById(‘againBtn’).addEventListener(‘click’, function(e) {
-e.preventDefault();
-document.getElementById(‘workerName’).value = ‘’;
-document.getElementById(‘navName’).value = ‘’;
-document.getElementById(‘navHandle’).value = ‘’;
-document.getElementById(‘affLink’).value = ‘’;
-uploadedUrl = ‘’;
-document.getElementById(‘urlPreview’).textContent = ‘https://[name].workers.dev’;
-document.getElementById(‘prevName’).textContent = ‘Name’;
-document.getElementById(‘prevHandle’).textContent = ‘@account’;
-document.getElementById(‘phoneImg’).style.display = ‘none’;
-document.getElementById(‘phoneEmpty’).style.display = ‘flex’;
-document.getElementById(‘uploadZone’).style.borderColor = ‘’;
-document.getElementById(‘uploadOk’).style.display = ‘none’;
-document.getElementById(‘logWrap’).classList.remove(‘show’);
-document.getElementById(‘successWrap’).classList.remove(‘show’);
-window.scrollTo({ top: 0, behavior: ‘smooth’ });
-});
+  }).catch(function(e){lg('ERR',e.message,'e');btn.innerHTML='Deploy';btn.disabled=false;});
+};
+document.getElementById('cp').onclick=function(){
+  var url=document.getElementById('su').textContent;
+  var b=this;
+  if(navigator.clipboard){navigator.clipboard.writeText(url).then(function(){b.textContent='Copied!';setTimeout(function(){b.textContent='Copy URL';},2000);});}
+  else{prompt('Copy:',url);}
+};
+document.getElementById('ag').onclick=function(){
+  document.getElementById('wn').value='';
+  document.getElementById('nn').value='';
+  document.getElementById('nh').value='';
+  document.getElementById('al').value='';
+  IM='';
+  document.getElementById('up').textContent='https://[name].workers.dev';
+  document.getElementById('pn').textContent='Name';
+  document.getElementById('ph').textContent='@account';
+  document.getElementById('pi').style.display='none';
+  document.getElementById('pe').style.display='flex';
+  document.getElementById('uz').style.borderColor='';
+  document.getElementById('uo').style.display='none';
+  document.getElementById('lg').classList.remove('on');
+  document.getElementById('sc').classList.remove('on');
+  window.scrollTo({top:0,behavior:'smooth'});
+};
 </script>
-
 </body>
 </html>
